@@ -1,0 +1,5 @@
+{
+  "name": "React Todo App",
+  "description": "A modern and visually appealing todo application built with React, TypeScript, and Tailwind CSS. It features local storage persistence, light/dark mode, and filtering capabilities.",
+  "requestFramePermissions": []
+}
