@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   return (
     <header className="flex items-center justify-between mb-8">
       <h1 className="text-4xl font-bold tracking-widest text-white uppercase sm:text-5xl">
-        Todo
+        Todo App
       </h1>
       <button
         onClick={toggleTheme}

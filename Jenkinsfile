@@ -31,7 +31,7 @@ pipeline {
             steps {
                 sh '''
                     cd $WORKSPACE
-                    podman-compose down || true
+                    podman-compose down
                     podman-compose up -d
                 '''
             }
