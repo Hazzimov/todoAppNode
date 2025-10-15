@@ -6,12 +6,12 @@ services:
     container_name: nodeapp
     working_dir: /usr/src/app
     volumes:
-      - "/var/lib/jenkins/workspace/todoAppNode/app:/usr/src/app:Z"
-      - "todoappnode_node_modules:/usr/src/app/node_modules:Z"  # named volume para node_modules
+      - .:/usr/src/app:Z                     # usa el workspace actual
+      - nodeapp_node_modules:/usr/src/app/node_modules:Z
     ports:
       - "3000:3000"
-    command: sh -c "npm install && npm start"
+    command: sh -c "npm install && npm run dev"
     restart: unless-stopped
 
 volumes:
-  todoappnode_node_modules:
+  nodeapp_node_modules:

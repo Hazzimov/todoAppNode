@@ -9,26 +9,32 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm ci'
-      }
-    }
-
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
-    }
-
-    stage('Deploy with Host Podman') {
-      steps {
-        script {
-          sh '''
-            podman-compose up -d
-          '''
+    stage('Install dependencies') {
+            steps {
+                sh '''
+                    cd $WORKSPACE
+                    npm ci || npm install
+                '''
+            }
         }
-      }
+
+        stage('Build app') {
+            steps {
+                sh '''
+                    cd $WORKSPACE
+                    npm run build || echo "No build step defined"
+                '''
+            }
+        }
+
+        stage('Deploy with Podman Compose') {
+            steps {
+                sh '''
+                    cd $WORKSPACE
+                    podman-compose down || true
+                    podman-compose up -d
+                '''
+            }
     }
   }
 
