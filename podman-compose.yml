@@ -1,11 +1,14 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: react-todo-app
+  nodeapp:
+    image: docker.io/library/node:20-alpine  # lightweight Node.js image
+    container_name: nodeapp
+    working_dir: /usr/src/app
+    volumes:
+      - ./app:/usr/src/app   # mount your app directory
+      - /usr/src/app/node_modules  # preserve container node_modules
     ports:
-      - "8080:80"
+      - "3000:3000"
+    command: sh -c "npm install && npm start"
     restart: unless-stopped
