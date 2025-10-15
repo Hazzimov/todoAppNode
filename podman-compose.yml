@@ -2,13 +2,16 @@ version: "3.9"
 
 services:
   nodeapp:
-    image: docker.io/library/node:20-alpine  # lightweight Node.js image
+    image: docker.io/library/node:20-alpine
     container_name: nodeapp
     working_dir: /usr/src/app
     volumes:
-      - ./app:/usr/src/app   # mount your app directory
-      - /usr/src/app/node_modules  # preserve container node_modules
+      - "/var/lib/jenkins/workspace/todoAppNode/app:/usr/src/app:Z"
+      - "todoappnode_node_modules:/usr/src/app/node_modules:Z"  # named volume para node_modules
     ports:
       - "3000:3000"
     command: sh -c "npm install && npm start"
     restart: unless-stopped
+
+volumes:
+  todoappnode_node_modules:
