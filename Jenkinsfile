@@ -39,7 +39,7 @@ pipeline {
                 '''
                 archiveArtifacts artifacts: 'todoAppNode.tar.gz'
             }
-        }
+        
 
         stage('Upload to GitHub Release') {
             steps {
