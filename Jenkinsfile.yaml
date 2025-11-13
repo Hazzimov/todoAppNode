@@ -1,39 +1,57 @@
 pipeline:
   agent:
-    none:
     any: true
+    # If your pipeline needs an agent defined at the top level, use:
+    # any: true
 
   environment:
     GH_TOKEN: credentials('48141ed0-8cd7-469b-8318-6ab01eba61e9')
 
   stages:
     - stage: "Stage1"
+      steps:
+        - echo "Stage 1 content"
+
     - stage: "Checkout"
       steps:
         - echo "1"
-    - stage: "Stage2"
-        - "git branch: 'main', url: 'https://github.com/Hazzimov/todoAppNode.git'"
-
+        # FIXED: Git step is now quoted to pass YAML parser.
+        - 'git branch: "main", url: "https://github.com/Hazzimov/todoAppNode.git"'
+        
     - stage: "Install dependencies"
       steps:
         - echo "2"
-        - "sh 'npm ci || npm install'"
+        - sh 'rm -rf node_modules package-lock.json'
+        - sh 'npm ci || npm install'
+
+    - stage: "Linting"
+      steps:
+        - echo "Running code linting..."
+        - sh 'npm run lint'
+
+    - stage: "Testing"
+      steps:
+        - echo "Running unit tests..."
+        - sh 'npm run test'
 
     - stage: "Build app"
       steps:
-        - "sh 'npm run build'"
+        - sh 'npm run build'
 
     - stage: "Archive Artifact"
       steps:
-        - "sh 'tar --exclude=.git --exclude=node_modules -czf todoAppNode.tar.gz dist package-lock.json package.json'"
-        - "archiveArtifacts artifacts: \"todoAppNode.tar.gz\""
+        - sh 'tar --exclude=.git --exclude=node_modules -czf todoAppNode.tar.gz dist package-lock.json package.json'
+        # FIXED: archiveArtifacts step is now quoted.
+        - 'archiveArtifacts artifacts: "todoAppNode.tar.gz"'
 
     - stage: "Upload to GitHub Release"
       steps:
-        - "sh 'gh release create v1.0.1 todoAppNode.tar.gz --repo Hazzimov/todoAppNode --title \"todoAppNode v1.0.0\" --notes \"Automated release\"'"
+        # FIXED: The entire shell command is quoted, and internal quotes are escaped.
+        - sh 'gh release create v1.0.1 todoAppNode.tar.gz --repo Hazzimov/todoAppNode --title "todoAppNode v1.0.0" --notes "Automated release"'
 
   post:
     success:
-      - "echo '✅ NodeApp deployed successfully using host Podman socket!'"
+      - echo '✅ NodeApp deployed successfully!'
+
     failure:
-      - "echo '❌ Build or deployment failed!'"
+      - echo '❌ Build or deployment failed!'
