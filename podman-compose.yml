@@ -1,17 +1,11 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  nodeapp:
-    image: docker.io/library/node:20-alpine
-    container_name: nodeapp
-    working_dir: /usr/src/app
-    volumes:
-      - ${WORKSPACE}:/usr/src/app:Z                     # usa el workspace actual
-      - nodeapp_node_modules:/usr/src/app/node_modules:Z
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: react-todo-app
     ports:
-      - "3000:3000"
-    command: sh -c "npm install && npm run dev"
+      - "8080:80"
     restart: unless-stopped
-
-volumes:
-  nodeapp_node_modules:
